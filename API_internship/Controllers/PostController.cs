@@ -15,11 +15,11 @@ namespace API_internship.Controllers
 
             try
             {
-                posts = await ApiHelper<Post>.GetAll("https://jsonplaceholder.typicode.com/posts");
+                posts = PostsListHelper.Posts();
             }
             catch (FailedGetException)
             {
-                return BadRequest("Failed request");
+                return BadRequest("Failed GET request");
             }
 
             return Ok(posts);
@@ -38,7 +38,12 @@ namespace API_internship.Controllers
             }
             catch (FailedGetException)
             {
-                return BadRequest("Failed request");
+                post = PostsListHelper.Posts().Find(x => x.Id == id);
+
+                if(post != null)
+                    return Ok(post);
+
+                return BadRequest("Failed GET request");
             }
 
             return Ok(post);
@@ -53,17 +58,15 @@ namespace API_internship.Controllers
             { 
                  result = await ApiHelper<Post>.PostOne
                     (post, "https://jsonplaceholder.typicode.com/posts/");
+
+                PostsListHelper.Record(result);
             }
             catch (FailedPostException)
             {
-                return BadRequest("Failed request");
-            }
-            catch (EmptyFieldsException)
-            {
-                return BadRequest("Fill in all fields");
+                return BadRequest("Failed POST request");
             }
             
-            return Ok(result);            
+            return Ok(PostsListHelper.Posts().Last());            
         }
     }
 }

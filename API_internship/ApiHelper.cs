@@ -6,7 +6,7 @@ namespace API_internship
 {
     public static class ApiHelper<T>
     {
-        public static async Task<List<T>> GetAll(string url)
+        public static List<T> GetAll(string url)
         {
             var list = new List<T>();
 
